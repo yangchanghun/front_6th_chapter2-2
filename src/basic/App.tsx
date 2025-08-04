@@ -457,6 +457,7 @@ const App = () => {
             handleCouponSubmit={handleCouponSubmit}
             couponForm={couponForm}
             setCouponForm={setCouponForm}
+            setProducts={setProducts}
           />
         ) : (
           <CartPage
