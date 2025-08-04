@@ -59,19 +59,10 @@ const App = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [showCouponForm, setShowCouponForm] = useState(false);
   const [activeTab, setActiveTab] = useState<'products' | 'coupons'>('products');
-  const [showProductForm, setShowProductForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
   // Admin
-  const [editingProduct, setEditingProduct] = useState<string | null>(null);
-  const [productForm, setProductForm] = useState({
-    name: '',
-    price: 0,
-    stock: 0,
-    description: '',
-    discounts: [] as Array<{ quantity: number; rate: number }>,
-  });
 
   // 쿠폰 입력폼
   const [couponForm, setCouponForm] = useState({
@@ -280,37 +271,10 @@ const App = () => {
   }, [addNotification]);
 
   // 상품추가
-  const addProduct = useCallback(
-    (newProduct: Omit<ProductWithUI, 'id'>) => {
-      const product: ProductWithUI = {
-        ...newProduct,
-        id: `p${Date.now()}`,
-      };
-      setProducts((prev) => [...prev, product]);
-      addNotification('상품이 추가되었습니다.', 'success');
-    },
-    [addNotification]
-  );
 
   // 상품 수정
-  const updateProduct = useCallback(
-    (productId: string, updates: Partial<ProductWithUI>) => {
-      setProducts((prev) =>
-        prev.map((product) => (product.id === productId ? { ...product, ...updates } : product))
-      );
-      addNotification('상품이 수정되었습니다.', 'success');
-    },
-    [addNotification]
-  );
 
   // 상품삭제
-  const deleteProduct = useCallback(
-    (productId: string) => {
-      setProducts((prev) => prev.filter((p) => p.id !== productId));
-      addNotification('상품이 삭제되었습니다.', 'success');
-    },
-    [addNotification]
-  );
 
   // 쿠폰 추가
   const addCoupon = useCallback(
@@ -338,21 +302,7 @@ const App = () => {
   );
 
   // 상품 등록
-  const handleProductSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingProduct && editingProduct !== 'new') {
-      updateProduct(editingProduct, productForm);
-      setEditingProduct(null);
-    } else {
-      addProduct({
-        ...productForm,
-        discounts: productForm.discounts,
-      });
-    }
-    setProductForm({ name: '', price: 0, stock: 0, description: '', discounts: [] });
-    setEditingProduct(null);
-    setShowProductForm(false);
-  };
+
   // 쿠폰 등록
   const handleCouponSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -367,17 +317,6 @@ const App = () => {
   };
 
   // 수정버튼클릭시
-  const startEditProduct = (product: ProductWithUI) => {
-    setEditingProduct(product.id);
-    setProductForm({
-      name: product.name,
-      price: product.price,
-      stock: product.stock,
-      description: product.description || '',
-      discounts: product.discounts || [],
-    });
-    setShowProductForm(true);
-  };
 
   const totals = calculateCartTotal();
 
@@ -438,18 +377,9 @@ const App = () => {
           <AdminPage
             setActiveTab={setActiveTab}
             activeTab={activeTab}
-            setEditingProduct={setEditingProduct}
-            setProductForm={setProductForm}
             setShowCouponForm={setShowCouponForm}
-            setShowProductForm={setShowProductForm}
             products={products}
             formatPrice={formatPrice}
-            startEditProduct={startEditProduct}
-            deleteProduct={deleteProduct}
-            showProductForm={showProductForm}
-            handleProductSubmit={handleProductSubmit}
-            editingProduct={editingProduct}
-            productForm={productForm}
             addNotification={addNotification}
             coupons={coupons}
             deleteCoupon={deleteCoupon}

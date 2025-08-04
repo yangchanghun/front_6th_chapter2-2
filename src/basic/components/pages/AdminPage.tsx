@@ -17,31 +17,9 @@ type NotificationType = 'error' | 'success' | 'warning';
 type AdminPageProps = {
   setActiveTab: (tab: 'products' | 'coupons') => void;
   activeTab: 'products' | 'coupons';
-  setEditingProduct: (productId: string | null) => void;
-  setProductForm: (form: {
-    name: string;
-    price: number;
-
-    stock: number;
-    description: string;
-    discounts: Array<{ quantity: number; rate: number }>;
-  }) => void;
   setShowCouponForm: (show: boolean) => void;
-  setShowProductForm: (show: boolean) => void;
   products: ProductWithUI[];
   formatPrice: (price: number, productId?: string) => string;
-  startEditProduct: (product: ProductWithUI) => void;
-  deleteProduct: (productId: string) => void;
-  showProductForm: boolean;
-  handleProductSubmit: (e: React.FormEvent) => void;
-  editingProduct: string | null;
-  productForm: {
-    name: string;
-    price: number;
-    stock: number;
-    description: string;
-    discounts: Array<{ quantity: number; rate: number }>;
-  };
   addNotification: (message: string, type?: NotificationType) => void;
   coupons: Coupon[];
   deleteCoupon: (code: string) => void;
