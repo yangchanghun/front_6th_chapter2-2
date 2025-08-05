@@ -12,25 +12,36 @@
 // - updateProductStock: 재고 수정
 // - addProductDiscount: 할인 규칙 추가
 // - removeProductDiscount: 할인 규칙 삭제
-import { useState } from 'react';
 
 import { ProductWithUI } from '../App';
 import { initialProducts } from '../constants';
+import { useLocalStorage } from '../utils/hooks/useLocalStorage';
+
 export function useProducts() {
-  const [products, setProducts] = useState<ProductWithUI[]>(() => {
-    const saved = localStorage.getItem('products');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return initialProducts;
-      }
-    }
-    return initialProducts;
-  });
+  const [products, setProducts] = useLocalStorage<ProductWithUI[]>('products', initialProducts);
+
+  const updateProduct = (productId: string, updates: Partial<ProductWithUI>) => {
+    setProducts((prev) =>
+      prev.map((product) => (product.id === productId ? { ...product, ...updates } : product))
+    );
+  };
+
+  const addProduct = (newProduct: Omit<ProductWithUI, 'id'>) => {
+    const product: ProductWithUI = {
+      ...newProduct,
+      id: `p${Date.now()}`,
+    };
+    setProducts((prev) => {
+      const updated = [...prev, product];
+      localStorage.setItem('products', JSON.stringify(updated)); // 수동 동기화 추가
+      return updated;
+    });
+  };
 
   return {
     products,
     setProducts,
+    updateProduct,
+    addProduct,
   };
 }

@@ -1,6 +1,5 @@
-import { useCallback } from 'react';
-
 import { ProductWithUI } from '../../App';
+import actionProducts from '../../hooks/actionProducts';
 
 type NotificationType = 'error' | 'success' | 'warning';
 
@@ -36,39 +35,20 @@ export default function ProductForm({
     if (editingProduct && editingProduct !== 'new') {
       updateProduct(editingProduct, productForm);
       setEditingProduct(null);
+      addNotification('상품이 수정되었습니다.', 'success');
     } else {
       addProduct({
         ...productForm,
         discounts: productForm.discounts,
       });
+      addNotification('상품이 추가되었습니다.', 'success');
     }
     setProductForm({ name: '', price: 0, stock: 0, description: '', discounts: [] });
     setEditingProduct(null);
     setShowProductForm(false);
   };
 
-  const updateProduct = useCallback(
-    (productId: string, updates: Partial<ProductWithUI>) => {
-      setProducts((prev) =>
-        prev.map((product) => (product.id === productId ? { ...product, ...updates } : product))
-      );
-      addNotification('상품이 수정되었습니다.', 'success');
-    },
-    [addNotification]
-  );
-
-  const addProduct = useCallback(
-    (newProduct: Omit<ProductWithUI, 'id'>) => {
-      const product: ProductWithUI = {
-        ...newProduct,
-        id: `p${Date.now()}`,
-      };
-      setProducts((prev) => [...prev, product]);
-      addNotification('상품이 추가되었습니다.', 'success');
-    },
-    [addNotification]
-  );
-
+  const { updateProduct, addProduct } = actionProducts({ setProducts });
   return (
     <div className='p-6 border-t border-gray-200 bg-gray-50'>
       <form onSubmit={handleProductSubmit} className='space-y-4'>

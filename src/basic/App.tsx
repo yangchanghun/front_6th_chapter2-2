@@ -21,7 +21,7 @@ export interface Notification {
 }
 
 const App = () => {
-  const { products, setProducts } = useProducts();
+  const { products, setProducts, addProduct, updateProduct } = useProducts();
   const { coupons, setCoupons } = useCoupons();
   const { cart, setCart } = useCart();
 
@@ -91,11 +91,10 @@ const App = () => {
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
     setTotalItemCount(count);
   }, [cart]);
-  // products설정
+
   useEffect(() => {
     localStorage.setItem('products', JSON.stringify(products));
   }, [products]);
-
   // 쿠폰 설정
   useEffect(() => {
     localStorage.setItem('coupons', JSON.stringify(coupons));
@@ -117,9 +116,6 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // 재고 추가
-
-  // 주문 완료
   const completeOrder = useCallback(() => {
     const orderNumber = `ORD-${Date.now()}`;
     addNotification(`주문이 완료되었습니다. 주문번호: ${orderNumber}`, 'success');
@@ -127,17 +123,6 @@ const App = () => {
     setSelectedCoupon(null);
   }, [addNotification]);
 
-  // 상품추가
-
-  // 상품 수정
-
-  // 상품삭제
-
-  // 쿠폰 추가
-
-  // 수정버튼클릭시
-
-  // 상품 필터링
   const filteredProducts = searchProductName
     ? products.filter(
         (product) =>
