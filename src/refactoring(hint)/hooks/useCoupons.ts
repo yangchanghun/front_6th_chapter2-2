@@ -8,6 +8,22 @@
 // - addCoupon: 새 쿠폰 추가
 // - removeCoupon: 쿠폰 삭제
 
+import { useState } from 'react';
+
+import { initialCoupons } from '../../basic/constants';
+import { Coupon } from '../../types';
+
 export function useCoupons() {
-  // TODO: 구현
+  const [coupons, setCoupons] = useState<Coupon[]>(() => {
+    const saved = localStorage.getItem('coupons');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return initialCoupons;
+      }
+    }
+    return initialCoupons;
+  });
+  return { coupons, setCoupons };
 }

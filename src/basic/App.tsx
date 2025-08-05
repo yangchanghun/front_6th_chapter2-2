@@ -5,7 +5,9 @@ import Header from './components/Header';
 import AdminPage from './components/pages/AdminPage';
 import CartPage from './components/pages/CartPage';
 import UIToast from './components/ui/UIToast';
-import { initialCoupons, initialProducts } from './constants';
+import { useCart } from './hooks/useCart';
+import { useCoupons } from './hooks/useCouponts';
+import { useProducts } from './hooks/useProducts';
 import { getMaxApplicableDiscount } from './utils/discount';
 export interface ProductWithUI extends Product {
   description?: string;
@@ -19,41 +21,9 @@ export interface Notification {
 }
 
 const App = () => {
-  const [products, setProducts] = useState<ProductWithUI[]>(() => {
-    const saved = localStorage.getItem('products');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return initialProducts;
-      }
-    }
-    return initialProducts;
-  });
-
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('cart');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  });
-
-  const [coupons, setCoupons] = useState<Coupon[]>(() => {
-    const saved = localStorage.getItem('coupons');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return initialCoupons;
-      }
-    }
-    return initialCoupons;
-  });
+  const { products, setProducts } = useProducts();
+  const { coupons, setCoupons } = useCoupons();
+  const { cart, setCart } = useCart();
 
   const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);

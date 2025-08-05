@@ -12,7 +12,25 @@
 // - updateProductStock: 재고 수정
 // - addProductDiscount: 할인 규칙 추가
 // - removeProductDiscount: 할인 규칙 삭제
+import { useState } from 'react';
 
+import { ProductWithUI } from '../App';
+import { initialProducts } from '../constants';
 export function useProducts() {
-  // TODO: 구현
+  const [products, setProducts] = useState<ProductWithUI[]>(() => {
+    const saved = localStorage.getItem('products');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return initialProducts;
+      }
+    }
+    return initialProducts;
+  });
+
+  return {
+    products,
+    setProducts,
+  };
 }
