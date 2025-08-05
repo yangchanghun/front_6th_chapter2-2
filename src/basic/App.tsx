@@ -4,6 +4,7 @@ import { CartItem, Coupon, Product } from '../types';
 import Header from './components/Header';
 import AdminPage from './components/pages/AdminPage';
 import CartPage from './components/pages/CartPage';
+import UIToast from './components/ui/UIToast';
 import { initialCoupons, initialProducts } from './constants';
 import { getMaxApplicableDiscount } from './utils/discount';
 export interface ProductWithUI extends Product {
@@ -92,36 +93,6 @@ const App = () => {
     return Math.round(price * quantity * (1 - discount));
   };
 
-  // 장바구니안 총액 계산
-  const calculateCartTotal = (): {
-    totalBeforeDiscount: number;
-    totalAfterDiscount: number;
-  } => {
-    let totalBeforeDiscount = 0;
-    let totalAfterDiscount = 0;
-
-    cart.forEach((item) => {
-      const itemPrice = item.product.price * item.quantity;
-      totalBeforeDiscount += itemPrice;
-      totalAfterDiscount += calculateItemTotal(item);
-    });
-
-    if (selectedCoupon) {
-      if (selectedCoupon.discountType === 'amount') {
-        totalAfterDiscount = Math.max(0, totalAfterDiscount - selectedCoupon.discountValue);
-      } else {
-        totalAfterDiscount = Math.round(
-          totalAfterDiscount * (1 - selectedCoupon.discountValue / 100)
-        );
-      }
-    }
-
-    return {
-      totalBeforeDiscount: Math.round(totalBeforeDiscount),
-      totalAfterDiscount: Math.round(totalAfterDiscount),
-    };
-  };
-
   // 재교 확인
   const getRemainingStock = (product: Product): number => {
     const cartItem = cart.find((item) => item.product.id === product.id);
@@ -178,22 +149,6 @@ const App = () => {
 
   // 재고 추가
 
-  // 쿠폰있으면 적용
-  const applyCoupon = useCallback(
-    (coupon: Coupon) => {
-      const currentTotal = calculateCartTotal().totalAfterDiscount;
-
-      if (currentTotal < 10000 && coupon.discountType === 'percentage') {
-        addNotification('percentage 쿠폰은 10,000원 이상 구매 시 사용 가능합니다.', 'error');
-        return;
-      }
-
-      setSelectedCoupon(coupon);
-      addNotification('쿠폰이 적용되었습니다.', 'success');
-    },
-    [addNotification, calculateCartTotal]
-  );
-
   // 주문 완료
   const completeOrder = useCallback(() => {
     const orderNumber = `ORD-${Date.now()}`;
@@ -212,8 +167,6 @@ const App = () => {
 
   // 수정버튼클릭시
 
-  const totals = calculateCartTotal();
-
   // 상품 필터링
   const filteredProducts = searchProductName
     ? products.filter(
@@ -227,35 +180,7 @@ const App = () => {
   return (
     <div className='min-h-screen bg-gray-50'>
       {notifications.length > 0 && (
-        <div className='fixed top-20 right-4 z-50 space-y-2 max-w-sm'>
-          {notifications.map((notif) => (
-            <div
-              key={notif.id}
-              className={`p-4 rounded-md shadow-md text-white flex justify-between items-center ${
-                notif.type === 'error'
-                  ? 'bg-red-600'
-                  : notif.type === 'warning'
-                  ? 'bg-yellow-600'
-                  : 'bg-green-600'
-              }`}
-            >
-              <span className='mr-2'>{notif.message}</span>
-              <button
-                onClick={() => setNotifications((prev) => prev.filter((n) => n.id !== notif.id))}
-                className='text-white hover:text-gray-200'
-              >
-                <svg className='w-4 h-4' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                  <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    strokeWidth={2}
-                    d='M6 18L18 6M6 6l12 12'
-                  />
-                </svg>
-              </button>
-            </div>
-          ))}
-        </div>
+        <UIToast notifications={notifications} setNotifications={setNotifications} />
       )}
       <Header
         isAdmin={isAdmin}
@@ -288,12 +213,10 @@ const App = () => {
             cart={cart}
             calculateItemTotal={calculateItemTotal}
             getRemainingStock={getRemainingStock}
-            formatPrice={formatPrice} // (price, id?) => string
+            formatPrice={formatPrice}
             coupons={coupons}
             selectedCoupon={selectedCoupon}
-            applyCoupon={applyCoupon}
             setSelectedCoupon={setSelectedCoupon}
-            totals={totals}
             completeOrder={completeOrder}
             setCart={setCart}
             addNotification={addNotification}

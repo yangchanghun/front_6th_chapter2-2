@@ -2,12 +2,6 @@ import { useState, useCallback } from 'react';
 
 import { ProductWithUI } from '../../App';
 import ProductForm from '../form/ProductForm';
-// 기능
-//  상품추가
-// setShowProductForm 여기서만 있는거
-// setEditngProduct 여기서만 있는거
-// setProductForm 여기만 있는거긴해
-// addProduct는 ㄹㅇ 여기서만 쓰임
 
 type NotificationType = 'error' | 'success' | 'warning';
 

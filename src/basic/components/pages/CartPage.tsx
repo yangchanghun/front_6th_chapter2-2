@@ -12,24 +12,14 @@ type CartPageProps = {
   products: ProductWithUI[];
   filteredProducts: ProductWithUI[];
   searchProductName: string;
-
   cart: CartItem[];
-
   calculateItemTotal: (item: CartItem) => number;
   getRemainingStock: (product: ProductWithUI) => number;
-
   formatPrice: (price: number, productId?: string) => string;
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
   coupons: Coupon[];
   selectedCoupon: Coupon | null;
-  applyCoupon: (coupon: Coupon) => void; // ✅ 오타 수정
   setSelectedCoupon: (coupon: Coupon | null) => void;
-
-  totals: {
-    totalBeforeDiscount: number;
-    totalAfterDiscount: number;
-  };
-
   completeOrder: () => void;
   addNotification: (message: string, type?: NotificationType) => void;
 };
