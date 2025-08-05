@@ -59,7 +59,7 @@ const App = () => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [activeTab, setActiveTab] = useState<'products' | 'coupons'>('products');
   const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
+  const [searchProductName, setSearchProductName] = useState('');
 
   // Admin
 
@@ -171,73 +171,12 @@ const App = () => {
   // 검색시
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedSearchTerm(searchTerm);
+      setSearchProductName(searchTerm);
     }, 500);
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
   // 재고 추가
-  const addToCart = useCallback(
-    (product: ProductWithUI) => {
-      const remainingStock = getRemainingStock(product);
-      if (remainingStock <= 0) {
-        addNotification('재고가 부족합니다!', 'error');
-        return;
-      }
-
-      setCart((prevCart) => {
-        const existingItem = prevCart.find((item) => item.product.id === product.id);
-
-        if (existingItem) {
-          const newQuantity = existingItem.quantity + 1;
-
-          if (newQuantity > product.stock) {
-            addNotification(`재고는 ${product.stock}개까지만 있습니다.`, 'error');
-            return prevCart;
-          }
-
-          return prevCart.map((item) =>
-            item.product.id === product.id ? { ...item, quantity: newQuantity } : item
-          );
-        }
-
-        return [...prevCart, { product, quantity: 1 }];
-      });
-
-      addNotification('장바구니에 담았습니다', 'success');
-    },
-    [cart, addNotification, getRemainingStock]
-  );
-
-  // 재고 제거
-  const removeFromCart = useCallback((productId: string) => {
-    setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
-  }, []);
-  // 수량 업데이트
-  const updateQuantity = useCallback(
-    (productId: string, newQuantity: number) => {
-      if (newQuantity <= 0) {
-        removeFromCart(productId);
-        return;
-      }
-
-      const product = products.find((p) => p.id === productId);
-      if (!product) return;
-
-      const maxStock = product.stock;
-      if (newQuantity > maxStock) {
-        addNotification(`재고는 ${maxStock}개까지만 있습니다.`, 'error');
-        return;
-      }
-
-      setCart((prevCart) =>
-        prevCart.map((item) =>
-          item.product.id === productId ? { ...item, quantity: newQuantity } : item
-        )
-      );
-    },
-    [products, removeFromCart, addNotification, getRemainingStock]
-  );
 
   // 쿠폰있으면 적용
   const applyCoupon = useCallback(
@@ -276,12 +215,12 @@ const App = () => {
   const totals = calculateCartTotal();
 
   // 상품 필터링
-  const filteredProducts = debouncedSearchTerm
+  const filteredProducts = searchProductName
     ? products.filter(
         (product) =>
-          product.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()) ||
+          product.name.toLowerCase().includes(searchProductName.toLowerCase()) ||
           (product.description &&
-            product.description.toLowerCase().includes(debouncedSearchTerm.toLowerCase()))
+            product.description.toLowerCase().includes(searchProductName.toLowerCase()))
       )
     : products;
 
@@ -345,11 +284,8 @@ const App = () => {
           <CartPage
             products={products}
             filteredProducts={filteredProducts}
-            debouncedSearchTerm={debouncedSearchTerm}
+            searchProductName={searchProductName}
             cart={cart}
-            addToCart={addToCart}
-            removeFromCart={removeFromCart} // (id: string) => void
-            updateQuantity={updateQuantity} // (id: string, qty: number) => void
             calculateItemTotal={calculateItemTotal}
             getRemainingStock={getRemainingStock}
             formatPrice={formatPrice} // (price, id?) => string
@@ -359,6 +295,8 @@ const App = () => {
             setSelectedCoupon={setSelectedCoupon}
             totals={totals}
             completeOrder={completeOrder}
+            setCart={setCart}
+            addNotification={addNotification}
           />
         )}
       </main>
