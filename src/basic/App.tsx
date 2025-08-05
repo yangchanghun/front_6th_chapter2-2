@@ -377,17 +377,14 @@ const App = () => {
           <AdminPage
             setActiveTab={setActiveTab}
             activeTab={activeTab}
-            setShowCouponForm={setShowCouponForm}
             products={products}
             formatPrice={formatPrice}
             addNotification={addNotification}
             coupons={coupons}
-            deleteCoupon={deleteCoupon}
-            showCouponForm={showCouponForm}
-            handleCouponSubmit={handleCouponSubmit}
-            couponForm={couponForm}
-            setCouponForm={setCouponForm}
             setProducts={setProducts}
+            setCoupons={setCoupons}
+            selectedCoupon={selectedCoupon}
+            setSelectedCoupon={setSelectedCoupon}
           />
         ) : (
           <CartPage
