@@ -9,6 +9,7 @@ import { useCart } from './hooks/useCart';
 import { useCoupons } from './hooks/useCouponts';
 import { useProducts } from './hooks/useProducts';
 import { getMaxApplicableDiscount } from './utils/discount';
+import { filterProductsBySearchTerm } from './utils/filterProducts';
 export interface ProductWithUI extends Product {
   description?: string;
   isRecommended?: boolean;
@@ -92,9 +93,6 @@ const App = () => {
     setTotalItemCount(count);
   }, [cart]);
 
-  useEffect(() => {
-    localStorage.setItem('products', JSON.stringify(products));
-  }, [products]);
   // 쿠폰 설정
   useEffect(() => {
     localStorage.setItem('coupons', JSON.stringify(coupons));
@@ -123,14 +121,7 @@ const App = () => {
     setSelectedCoupon(null);
   }, [addNotification]);
 
-  const filteredProducts = searchProductName
-    ? products.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchProductName.toLowerCase()) ||
-          (product.description &&
-            product.description.toLowerCase().includes(searchProductName.toLowerCase()))
-      )
-    : products;
+  const filteredProducts = filterProductsBySearchTerm(products, searchProductName);
 
   return (
     <div className='min-h-screen bg-gray-50'>

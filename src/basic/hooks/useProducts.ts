@@ -13,6 +13,11 @@
 // - addProductDiscount: 할인 규칙 추가
 // - removeProductDiscount: 할인 규칙 삭제
 
+// products,setProducts사용 되는 로직 다 몰아넣는게 엔티티 분리일까 ?
+// -_-
+
+import { useEffect } from 'react';
+
 import { ProductWithUI } from '../App';
 import { initialProducts } from '../constants';
 import { useLocalStorage } from '../utils/hooks/useLocalStorage';
@@ -37,6 +42,10 @@ export function useProducts() {
       return updated;
     });
   };
+
+  useEffect(() => {
+    localStorage.setItem('products', JSON.stringify(products));
+  }, [products]);
 
   return {
     products,
