@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 
 import { ProductWithUI } from '../../App';
+import useProductForm from '../../hooks/useSubmitForm';
 import ProductForm from '../form/ProductForm';
 
 type NotificationType = 'error' | 'success' | 'warning';
@@ -17,27 +18,16 @@ export default function ProductsTab({
   setProducts,
   products,
 }: ProductsTabProps) {
-  const [editingProduct, setEditingProduct] = useState<string | null>(null);
-  const [productForm, setProductForm] = useState({
-    name: '',
-    price: 0,
-    stock: 0,
-    description: '',
-    discounts: [] as Array<{ quantity: number; rate: number }>,
-  });
   const [showProductForm, setShowProductForm] = useState(false);
+  const {
+    startEditProduct,
+    handleProductSubmit,
+    productForm,
+    setProductForm,
+    setEditingProduct,
+    editingProduct,
+  } = useProductForm({ addNotification, setProducts, setShowProductForm });
 
-  const startEditProduct = (product: ProductWithUI) => {
-    setEditingProduct(product.id);
-    setProductForm({
-      name: product.name,
-      price: product.price,
-      stock: product.stock,
-      description: product.description || '',
-      discounts: product.discounts || [],
-    });
-    setShowProductForm(true);
-  };
   const deleteProduct = useCallback(
     (productId: string) => {
       setProducts((prev) => prev.filter((p) => p.id !== productId));
@@ -137,6 +127,7 @@ export default function ProductsTab({
           setShowProductForm={setShowProductForm}
           productForm={productForm}
           setProductForm={setProductForm}
+          handleProductSubmit={handleProductSubmit}
         />
       )}
     </section>

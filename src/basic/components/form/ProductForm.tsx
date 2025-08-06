@@ -1,5 +1,4 @@
 import { ProductWithUI } from '../../App';
-import actionProducts from '../../hooks/actionProducts';
 
 type NotificationType = 'error' | 'success' | 'warning';
 
@@ -19,36 +18,18 @@ interface ProductFormProps {
   setShowProductForm: React.Dispatch<React.SetStateAction<boolean>>;
   productForm: ProductDraft;
   setProductForm: React.Dispatch<React.SetStateAction<ProductDraft>>;
+  handleProductSubmit: (e: React.FormEvent) => void;
 }
 
 export default function ProductForm({
   editingProduct,
   setEditingProduct,
-  setProducts,
+  handleProductSubmit,
   addNotification,
   setShowProductForm,
   productForm,
   setProductForm,
 }: ProductFormProps) {
-  const handleProductSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (editingProduct && editingProduct !== 'new') {
-      updateProduct(editingProduct, productForm);
-      setEditingProduct(null);
-      addNotification('상품이 수정되었습니다.', 'success');
-    } else {
-      addProduct({
-        ...productForm,
-        discounts: productForm.discounts,
-      });
-      addNotification('상품이 추가되었습니다.', 'success');
-    }
-    setProductForm({ name: '', price: 0, stock: 0, description: '', discounts: [] });
-    setEditingProduct(null);
-    setShowProductForm(false);
-  };
-
-  const { updateProduct, addProduct } = actionProducts({ setProducts });
   return (
     <div className='p-6 border-t border-gray-200 bg-gray-50'>
       <form onSubmit={handleProductSubmit} className='space-y-4'>
