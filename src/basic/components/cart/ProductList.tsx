@@ -1,20 +1,22 @@
+import { CartItem } from '../../../types';
 import { ProductWithUI } from '../../App';
+import { getRemainingStock } from '../../utils/calculateItem';
 interface ProductListProps {
   filteredProducts: ProductWithUI[];
   products: ProductWithUI[];
   searchProductName: string;
-  getRemainingStock: (product: ProductWithUI) => number;
   addToCart: (product: ProductWithUI) => void;
   formatPrice: (price: number, productId?: string) => string;
+  cart: CartItem[];
 }
 
 export default function ProductList({
   filteredProducts,
   products,
   searchProductName,
-  getRemainingStock,
   addToCart,
   formatPrice,
+  cart,
 }: ProductListProps) {
   return (
     <section>
@@ -29,7 +31,7 @@ export default function ProductList({
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
           {filteredProducts.map((product) => {
-            const remainingStock = getRemainingStock(product);
+            const remainingStock = getRemainingStock(product, cart);
 
             return (
               <div

@@ -2,13 +2,12 @@ import { useCallback } from 'react';
 
 import { CartItem } from '../../../types';
 import { ProductWithUI } from '../../App';
-
+import { getRemainingStock } from '../../utils/calculateItem';
+import { calculateItemTotal } from '../../utils/calculateItem';
 type NotificationType = 'error' | 'success' | 'warning';
 
 interface CartItemListProps {
   cart: CartItem[];
-  calculateItemTotal: (item: CartItem) => number;
-  getRemainingStock: (product: ProductWithUI) => number;
   addNotification: (message: string, type?: NotificationType) => void;
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
 
@@ -17,8 +16,6 @@ interface CartItemListProps {
 
 export default function CartItemList({
   cart,
-  calculateItemTotal,
-  getRemainingStock,
   addNotification,
   setCart,
   products,
@@ -55,7 +52,7 @@ export default function CartItemList({
   return (
     <div className='space-y-3'>
       {cart.map((item) => {
-        const itemTotal = calculateItemTotal(item);
+        const itemTotal = calculateItemTotal(item, cart);
         const originalPrice = item.product.price * item.quantity;
         const hasDiscount = itemTotal < originalPrice;
         const discountRate = hasDiscount ? Math.round((1 - itemTotal / originalPrice) * 100) : 0;

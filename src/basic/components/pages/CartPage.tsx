@@ -2,10 +2,12 @@ import { useCallback } from 'react';
 
 import { CartItem, Coupon } from '../../../types';
 import { ProductWithUI } from '../../App';
+import { getRemainingStock } from '../../utils/calculateItem';
 import CartItemList from '../cart/CartItemList';
 import CouponSelector from '../cart/CouponSelector';
 import EmptyCart from '../cart/EmptyCart';
 import ProductList from '../cart/ProductList';
+import { calculateItemTotal } from '../../utils/calculateItem';
 type NotificationType = 'error' | 'success' | 'warning';
 
 type CartPageProps = {
@@ -13,8 +15,6 @@ type CartPageProps = {
   filteredProducts: ProductWithUI[];
   searchProductName: string;
   cart: CartItem[];
-  calculateItemTotal: (item: CartItem) => number;
-  getRemainingStock: (product: ProductWithUI) => number;
   formatPrice: (price: number, productId?: string) => string;
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
   coupons: Coupon[];
@@ -28,9 +28,7 @@ export default function CartPage({
   products,
   filteredProducts,
   searchProductName,
-  getRemainingStock,
   formatPrice,
-  calculateItemTotal,
   cart,
   coupons,
   selectedCoupon,
@@ -49,7 +47,7 @@ export default function CartPage({
     cart.forEach((item) => {
       const itemPrice = item.product.price * item.quantity;
       totalBeforeDiscount += itemPrice;
-      totalAfterDiscount += calculateItemTotal(item);
+      totalAfterDiscount += calculateItemTotal(item, cart);
     });
 
     if (selectedCoupon) {
@@ -72,7 +70,7 @@ export default function CartPage({
 
   const addToCart = useCallback(
     (product: ProductWithUI) => {
-      const remainingStock = getRemainingStock(product);
+      const remainingStock = getRemainingStock(product, cart);
       if (remainingStock <= 0) {
         addNotification('재고가 부족합니다!', 'error');
         return;
@@ -110,9 +108,9 @@ export default function CartPage({
           filteredProducts={filteredProducts}
           products={products}
           searchProductName={searchProductName}
-          getRemainingStock={getRemainingStock}
           addToCart={addToCart}
           formatPrice={formatPrice}
+          cart={cart}
         />
       </div>
 
@@ -135,8 +133,6 @@ export default function CartPage({
             ) : (
               <CartItemList
                 cart={cart}
-                calculateItemTotal={calculateItemTotal}
-                getRemainingStock={getRemainingStock}
                 addNotification={addNotification}
                 setCart={setCart}
                 products={products}
