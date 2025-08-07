@@ -24,7 +24,7 @@
 // - getRemainingStock: 재고 확인 함수
 // - clearCart: 장바구니 비우기 함수
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { CartItem } from '../../types';
 
@@ -40,5 +40,22 @@ export function useCart() {
     }
     return [];
   });
-  return { cart, setCart };
+  const [totalItemCount, setTotalItemCount] = useState(0);
+
+  // 카트 아이템 수 계산
+  useEffect(() => {
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+    setTotalItemCount(count);
+  }, [cart]);
+
+  // 장바구니 설정
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem('cart', JSON.stringify(cart));
+    } else {
+      localStorage.removeItem('cart');
+    }
+  }, [cart]);
+
+  return { cart, setCart, totalItemCount };
 }

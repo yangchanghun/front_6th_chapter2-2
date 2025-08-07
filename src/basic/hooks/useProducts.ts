@@ -25,24 +25,6 @@ import { useLocalStorage } from '../utils/hooks/useLocalStorage';
 export function useProducts() {
   const [products, setProducts] = useLocalStorage<ProductWithUI[]>('products', initialProducts);
 
-  const updateProduct = (productId: string, updates: Partial<ProductWithUI>) => {
-    setProducts((prev) =>
-      prev.map((product) => (product.id === productId ? { ...product, ...updates } : product))
-    );
-  };
-
-  const addProduct = (newProduct: Omit<ProductWithUI, 'id'>) => {
-    const product: ProductWithUI = {
-      ...newProduct,
-      id: `p${Date.now()}`,
-    };
-    setProducts((prev) => {
-      const updated = [...prev, product];
-      localStorage.setItem('products', JSON.stringify(updated)); // 수동 동기화 추가
-      return updated;
-    });
-  };
-
   useEffect(() => {
     localStorage.setItem('products', JSON.stringify(products));
   }, [products]);
@@ -50,7 +32,5 @@ export function useProducts() {
   return {
     products,
     setProducts,
-    updateProduct,
-    addProduct,
   };
 }

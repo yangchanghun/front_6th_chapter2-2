@@ -8,7 +8,7 @@
 // - addCoupon: 새 쿠폰 추가
 // - removeCoupon: 쿠폰 삭제
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { initialCoupons } from '../../basic/constants';
 import { Coupon } from '../../types';
@@ -25,5 +25,11 @@ export function useCoupons() {
     }
     return initialCoupons;
   });
+
+  // 쿠폰 설정
+  useEffect(() => {
+    localStorage.setItem('coupons', JSON.stringify(coupons));
+  }, [coupons]);
+
   return { coupons, setCoupons };
 }

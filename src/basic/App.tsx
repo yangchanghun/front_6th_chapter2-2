@@ -22,7 +22,7 @@ export interface Notification {
 }
 
 const App = () => {
-  const { products, setProducts, addProduct, updateProduct } = useProducts();
+  const { products, setProducts } = useProducts();
   const { coupons, setCoupons } = useCoupons();
   const { cart, setCart } = useCart();
 
