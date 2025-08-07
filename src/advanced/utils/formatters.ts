@@ -1,6 +1,6 @@
-import { CartItem } from '../../types';
-import { ProductWithUI } from '../App';
 import { getRemainingStock } from './calculateItem';
+import { CartItem } from '../../types';
+import { ProductWithUI } from '../components/AppContainer';
 
 export const formatPrice = (
   price: number,

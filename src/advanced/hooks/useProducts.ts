@@ -16,14 +16,13 @@
 // products,setProducts사용 되는 로직 다 몰아넣는게 엔티티 분리일까 ?
 // -_-
 
+import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 
-import { ProductWithUI } from '../App';
-import { initialProducts } from '../constants';
-import { useLocalStorage } from '../utils/hooks/useLocalStorage';
+import { productsAtom } from '../atoms/productAtom';
 
 export function useProducts() {
-  const [products, setProducts] = useLocalStorage<ProductWithUI[]>('products', initialProducts);
+  const [products, setProducts] = useAtom(productsAtom);
 
   useEffect(() => {
     localStorage.setItem('products', JSON.stringify(products));

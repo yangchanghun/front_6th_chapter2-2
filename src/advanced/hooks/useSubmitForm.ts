@@ -1,20 +1,19 @@
+import { useAtom } from 'jotai';
 import { useState, useCallback } from 'react';
 
 import { Coupon } from '../../types';
-import { ProductWithUI } from '../App';
+import { productsAtom } from '../atoms/productAtom';
+import { ProductWithUI } from '../components/AppContainer';
 
 interface useProuctFormaProps {
-  setProducts: React.Dispatch<React.SetStateAction<ProductWithUI[]>>;
   setShowProductForm: React.Dispatch<React.SetStateAction<boolean>>;
   addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void;
 }
 
-export function useProductForm({
-  setProducts,
-  setShowProductForm,
-  addNotification,
-}: useProuctFormaProps) {
+export function useProductForm({ setShowProductForm, addNotification }: useProuctFormaProps) {
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setProducts] = useAtom(productsAtom);
 
   const [productForm, setProductForm] = useState({
     name: '',

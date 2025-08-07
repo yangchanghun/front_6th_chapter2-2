@@ -24,27 +24,21 @@
 // - getRemainingStock: 재고 확인 함수
 // - clearCart: 장바구니 비우기 함수
 
+import { useAtom, useAtomValue } from 'jotai';
 import { useState, useEffect, useCallback } from 'react';
 
 import { CartItem } from '../../types';
-import { ProductWithUI } from '../App';
+import { cartAtom } from '../atoms/cartAtom';
+import { productsAtom } from '../atoms/productAtom';
+import { ProductWithUI } from '../components/AppContainer';
 import { getRemainingStock } from '../utils/calculateItem';
 
 export function useCart(
-  addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void,
-  products: ProductWithUI[]
+  addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void
 ) {
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem('cart');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch {
-        return [];
-      }
-    }
-    return [];
-  });
+  const products = useAtomValue(productsAtom);
+
+  const [cart, setCart] = useAtom(cartAtom);
   const [totalItemCount, setTotalItemCount] = useState(0);
 
   const addToCart = useCallback(
