@@ -1,13 +1,10 @@
-import { useCallback } from 'react';
-
 import { CartItem, Coupon } from '../../../types';
 import { ProductWithUI } from '../../App';
-import { getRemainingStock } from '../../utils/calculateItem';
+import { calculateCartTotal } from '../../utils/calculateItem';
 import CartItemList from '../cart/CartItemList';
 import CouponSelector from '../cart/CouponSelector';
 import EmptyCart from '../cart/EmptyCart';
 import ProductList from '../cart/ProductList';
-import { calculateItemTotal } from '../../utils/calculateItem';
 type NotificationType = 'error' | 'success' | 'warning';
 
 type CartPageProps = {
@@ -22,6 +19,7 @@ type CartPageProps = {
   setSelectedCoupon: (coupon: Coupon | null) => void;
   completeOrder: () => void;
   addNotification: (message: string, type?: NotificationType) => void;
+  addToCart: (product: ProductWithUI) => void;
 };
 
 export default function CartPage({
@@ -36,69 +34,9 @@ export default function CartPage({
   completeOrder,
   setCart,
   addNotification,
+  addToCart,
 }: CartPageProps) {
-  const calculateCartTotal = (): {
-    totalBeforeDiscount: number;
-    totalAfterDiscount: number;
-  } => {
-    let totalBeforeDiscount = 0;
-    let totalAfterDiscount = 0;
-
-    cart.forEach((item) => {
-      const itemPrice = item.product.price * item.quantity;
-      totalBeforeDiscount += itemPrice;
-      totalAfterDiscount += calculateItemTotal(item, cart);
-    });
-
-    if (selectedCoupon) {
-      if (selectedCoupon.discountType === 'amount') {
-        totalAfterDiscount = Math.max(0, totalAfterDiscount - selectedCoupon.discountValue);
-      } else {
-        totalAfterDiscount = Math.round(
-          totalAfterDiscount * (1 - selectedCoupon.discountValue / 100)
-        );
-      }
-    }
-
-    return {
-      totalBeforeDiscount: Math.round(totalBeforeDiscount),
-      totalAfterDiscount: Math.round(totalAfterDiscount),
-    };
-  };
-
-  const totals = calculateCartTotal();
-
-  const addToCart = useCallback(
-    (product: ProductWithUI) => {
-      const remainingStock = getRemainingStock(product, cart);
-      if (remainingStock <= 0) {
-        addNotification('재고가 부족합니다!', 'error');
-        return;
-      }
-
-      setCart((prevCart) => {
-        const existingItem = prevCart.find((item) => item.product.id === product.id);
-
-        if (existingItem) {
-          const newQuantity = existingItem.quantity + 1;
-
-          if (newQuantity > product.stock) {
-            addNotification(`재고는 ${product.stock}개까지만 있습니다.`, 'error');
-            return prevCart;
-          }
-
-          return prevCart.map((item) =>
-            item.product.id === product.id ? { ...item, quantity: newQuantity } : item
-          );
-        }
-
-        return [...prevCart, { product, quantity: 1 }];
-      });
-
-      addNotification('장바구니에 담았습니다', 'success');
-    },
-    [cart, addNotification, getRemainingStock]
-  );
+  const totals = calculateCartTotal(cart, selectedCoupon);
 
   return (
     <div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
@@ -146,8 +84,8 @@ export default function CartPage({
                 coupons={coupons}
                 selectedCoupon={selectedCoupon}
                 setSelectedCoupon={setSelectedCoupon}
-                calculateCartTotal={calculateCartTotal}
                 addNotification={addNotification}
+                cart={cart}
               />
 
               <section className='bg-white rounded-lg border border-gray-200 p-4'>

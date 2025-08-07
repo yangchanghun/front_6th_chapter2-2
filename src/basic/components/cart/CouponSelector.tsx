@@ -1,29 +1,26 @@
 import { useCallback } from 'react';
 
-import { Coupon } from '../../../types';
+import { CartItem, Coupon } from '../../../types';
+import { calculateCartTotal } from '../../utils/calculateItem';
 type NotificationType = 'error' | 'success' | 'warning';
-type CartTotals = {
-  totalBeforeDiscount: number;
-  totalAfterDiscount: number;
-};
 interface CouponSelectorProps {
   coupons: Coupon[];
   setSelectedCoupon: (coupon: Coupon | null) => void;
   selectedCoupon: Coupon | null;
-  calculateCartTotal: () => CartTotals;
   addNotification: (message: string, type?: NotificationType) => void;
+  cart: CartItem[];
 }
 
 export default function CouponSelector({
   coupons,
   selectedCoupon,
   setSelectedCoupon,
-  calculateCartTotal,
   addNotification,
+  cart,
 }: CouponSelectorProps) {
   const applyCoupon = useCallback(
     (coupon: Coupon) => {
-      const currentTotal = calculateCartTotal().totalAfterDiscount;
+      const currentTotal = calculateCartTotal(cart, selectedCoupon).totalAfterDiscount;
 
       if (currentTotal < 10000 && coupon.discountType === 'percentage') {
         addNotification('percentage 쿠폰은 10,000원 이상 구매 시 사용 가능합니다.', 'error');

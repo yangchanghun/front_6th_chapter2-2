@@ -24,7 +24,6 @@ export interface Notification {
 const App = () => {
   const { products, setProducts, deleteProduct } = useProducts();
   const { coupons, setCoupons } = useCoupons();
-  const { cart, setCart, totalItemCount } = useCart();
   const [isAdmin, setIsAdmin] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [activeTab, setActiveTab] = useState<'products' | 'coupons'>('products');
@@ -66,6 +65,8 @@ const App = () => {
     },
     []
   );
+
+  const { cart, setCart, totalItemCount, addToCart } = useCart(addNotification);
 
   // 검색시
   useEffect(() => {
@@ -126,6 +127,7 @@ const App = () => {
             completeOrder={completeOrder}
             setCart={setCart}
             addNotification={addNotification}
+            addToCart={addToCart}
           />
         )}
       </main>

@@ -1,6 +1,6 @@
 import { getMaxApplicableDiscount } from './discount';
-import { CartItem } from '../../types';
-import { Product } from '../../types';
+import { CartItem, Product, Coupon } from '../../types';
+
 export const calculateItemTotal = (item: CartItem, cart: CartItem[]): number => {
   const hasBulkPurchase = cart.some((item) => item.quantity >= 10);
 
@@ -17,4 +17,36 @@ export const getRemainingStock = (product: Product, cart: CartItem[]): number =>
   const remaining = product.stock - (cartItem?.quantity || 0);
 
   return remaining;
+};
+
+export const calculateCartTotal = (
+  cart: CartItem[],
+  selectedCoupon: Coupon | null
+): {
+  totalBeforeDiscount: number;
+  totalAfterDiscount: number;
+} => {
+  let totalBeforeDiscount = 0;
+  let totalAfterDiscount = 0;
+
+  cart.forEach((item) => {
+    const itemPrice = item.product.price * item.quantity;
+    totalBeforeDiscount += itemPrice;
+    totalAfterDiscount += calculateItemTotal(item, cart);
+  });
+
+  if (selectedCoupon) {
+    if (selectedCoupon.discountType === 'amount') {
+      totalAfterDiscount = Math.max(0, totalAfterDiscount - selectedCoupon.discountValue);
+    } else {
+      totalAfterDiscount = Math.round(
+        totalAfterDiscount * (1 - selectedCoupon.discountValue / 100)
+      );
+    }
+  }
+
+  return {
+    totalBeforeDiscount: Math.round(totalBeforeDiscount),
+    totalAfterDiscount: Math.round(totalAfterDiscount),
+  };
 };
