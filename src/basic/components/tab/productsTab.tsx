@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 
 import { ProductWithUI } from '../../App';
 import useProductForm from '../../hooks/useSubmitForm';
@@ -11,12 +11,14 @@ interface ProductsTabProps {
   formatPrice: (price: number, productId?: string) => string;
   setProducts: React.Dispatch<React.SetStateAction<ProductWithUI[]>>;
   products: ProductWithUI[];
+  deleteProduct: (productId: string) => void; // ✅ 이 줄이 핵심
 }
 export default function ProductsTab({
   addNotification,
   formatPrice,
   setProducts,
   products,
+  deleteProduct,
 }: ProductsTabProps) {
   const [showProductForm, setShowProductForm] = useState(false);
   const {
@@ -28,13 +30,6 @@ export default function ProductsTab({
     editingProduct,
   } = useProductForm({ addNotification, setProducts, setShowProductForm });
 
-  const deleteProduct = useCallback(
-    (productId: string) => {
-      setProducts((prev) => prev.filter((p) => p.id !== productId));
-      addNotification('상품이 삭제되었습니다.', 'success');
-    },
-    [addNotification]
-  );
   return (
     <section className='bg-white rounded-lg border border-gray-200'>
       <div className='p-6 border-b border-gray-200'>

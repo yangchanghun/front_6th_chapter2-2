@@ -29,8 +29,13 @@ export function useProducts() {
     localStorage.setItem('products', JSON.stringify(products));
   }, [products]);
 
+  const deleteProduct = (productId: string) => {
+    setProducts((prev) => prev.filter((p) => p.id !== productId));
+  };
+
   return {
     products,
     setProducts,
+    deleteProduct,
   };
 }

@@ -22,16 +22,15 @@ export interface Notification {
 }
 
 const App = () => {
-  const { products, setProducts } = useProducts();
+  const { products, setProducts, deleteProduct } = useProducts();
   const { coupons, setCoupons } = useCoupons();
   const { cart, setCart, totalItemCount } = useCart();
-
-  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [activeTab, setActiveTab] = useState<'products' | 'coupons'>('products');
   const [searchTerm, setSearchTerm] = useState('');
   const [searchProductName, setSearchProductName] = useState('');
+  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
 
   // Admin
 
@@ -112,6 +111,7 @@ const App = () => {
             setCoupons={setCoupons}
             selectedCoupon={selectedCoupon}
             setSelectedCoupon={setSelectedCoupon}
+            deleteProduct={deleteProduct}
           />
         ) : (
           <CartPage

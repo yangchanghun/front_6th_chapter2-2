@@ -25,6 +25,7 @@ type AdminPageProps = {
   selectedCoupon: Coupon | null;
   setCoupons: React.Dispatch<React.SetStateAction<Coupon[]>>;
   setSelectedCoupon: React.Dispatch<React.SetStateAction<Coupon | null>>;
+  deleteProduct: (productId: string) => void; // ✅ 이 줄이 핵심
 };
 
 export default function AdminPage({
@@ -37,6 +38,7 @@ export default function AdminPage({
   setCoupons,
   setSelectedCoupon,
   selectedCoupon,
+  deleteProduct,
   coupons,
 }: AdminPageProps) {
   return (
@@ -77,6 +79,7 @@ export default function AdminPage({
           formatPrice={formatPrice}
           products={products}
           setProducts={setProducts}
+          deleteProduct={deleteProduct}
         />
       ) : (
         <CouponsTab

@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 import { ProductWithUI } from '../App';
 
-interface useProuctForm {
+interface useProuctFormaProps {
   setProducts: React.Dispatch<React.SetStateAction<ProductWithUI[]>>;
   setShowProductForm: React.Dispatch<React.SetStateAction<boolean>>;
   addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void;
@@ -12,7 +12,7 @@ export default function useProductForm({
   setProducts,
   setShowProductForm,
   addNotification,
-}: useProuctForm) {
+}: useProuctFormaProps) {
   const [editingProduct, setEditingProduct] = useState<string | null>(null);
 
   const [productForm, setProductForm] = useState({
