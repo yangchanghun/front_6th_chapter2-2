@@ -1,37 +1,18 @@
-import { useCallback } from 'react';
+import { Coupon } from '../../../types';
 
-import { CartItem, Coupon } from '../../../types';
-import { calculateCartTotal } from '../../utils/calculateItem';
-type NotificationType = 'error' | 'success' | 'warning';
 interface CouponSelectorProps {
   coupons: Coupon[];
   setSelectedCoupon: (coupon: Coupon | null) => void;
   selectedCoupon: Coupon | null;
-  addNotification: (message: string, type?: NotificationType) => void;
-  cart: CartItem[];
+  applyCoupon: (coupon: Coupon) => void;
 }
 
 export default function CouponSelector({
   coupons,
   selectedCoupon,
   setSelectedCoupon,
-  addNotification,
-  cart,
+  applyCoupon,
 }: CouponSelectorProps) {
-  const applyCoupon = useCallback(
-    (coupon: Coupon) => {
-      const currentTotal = calculateCartTotal(cart, selectedCoupon).totalAfterDiscount;
-
-      if (currentTotal < 10000 && coupon.discountType === 'percentage') {
-        addNotification('percentage 쿠폰은 10,000원 이상 구매 시 사용 가능합니다.', 'error');
-        return;
-      }
-
-      setSelectedCoupon(coupon);
-      addNotification('쿠폰이 적용되었습니다.', 'success');
-    },
-    [addNotification, calculateCartTotal]
-  );
   return (
     <section className='bg-white rounded-lg border border-gray-200 p-4'>
       <div className='flex items-center justify-between mb-3'>

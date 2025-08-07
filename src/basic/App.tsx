@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
 
-import { Coupon, Product } from '../types';
+import { Product } from '../types';
 import Header from './components/Header';
 import AdminPage from './components/pages/AdminPage';
 import CartPage from './components/pages/CartPage';
@@ -23,13 +23,11 @@ export interface Notification {
 
 const App = () => {
   const { products, setProducts, deleteProduct } = useProducts();
-  const { coupons, setCoupons } = useCoupons();
   const [isAdmin, setIsAdmin] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [activeTab, setActiveTab] = useState<'products' | 'coupons'>('products');
   const [searchTerm, setSearchTerm] = useState('');
   const [searchProductName, setSearchProductName] = useState('');
-  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
 
   // Admin
 
@@ -67,6 +65,10 @@ const App = () => {
   );
 
   const { cart, setCart, totalItemCount, addToCart } = useCart(addNotification);
+  const { coupons, setCoupons, selectedCoupon, setSelectedCoupon, applyCoupon } = useCoupons(
+    cart,
+    addNotification
+  );
 
   // 검색시
   useEffect(() => {
@@ -128,6 +130,7 @@ const App = () => {
             setCart={setCart}
             addNotification={addNotification}
             addToCart={addToCart}
+            applyCoupon={applyCoupon}
           />
         )}
       </main>

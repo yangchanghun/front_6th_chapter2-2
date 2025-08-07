@@ -8,12 +8,16 @@
 // - addCoupon: 새 쿠폰 추가
 // - removeCoupon: 쿠폰 삭제
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 import { initialCoupons } from '../../basic/constants';
-import { Coupon } from '../../types';
+import { CartItem, Coupon } from '../../types';
+import { calculateCartTotal } from '../utils/calculateItem';
 
-export function useCoupons() {
+export function useCoupons(
+  cart: CartItem[],
+  addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void
+) {
   const [coupons, setCoupons] = useState<Coupon[]>(() => {
     const saved = localStorage.getItem('coupons');
     if (saved) {
@@ -25,11 +29,26 @@ export function useCoupons() {
     }
     return initialCoupons;
   });
-
+  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
   // 쿠폰 설정
   useEffect(() => {
     localStorage.setItem('coupons', JSON.stringify(coupons));
   }, [coupons]);
 
-  return { coupons, setCoupons };
+  const applyCoupon = useCallback(
+    (coupon: Coupon) => {
+      const currentTotal = calculateCartTotal(cart, selectedCoupon).totalAfterDiscount;
+
+      if (currentTotal < 10000 && coupon.discountType === 'percentage') {
+        addNotification('percentage 쿠폰은 10,000원 이상 구매 시 사용 가능합니다.', 'error');
+        return;
+      }
+
+      setSelectedCoupon(coupon);
+      addNotification('쿠폰이 적용되었습니다.', 'success');
+    },
+    [addNotification, calculateCartTotal]
+  );
+
+  return { coupons, setCoupons, setSelectedCoupon, selectedCoupon, applyCoupon };
 }

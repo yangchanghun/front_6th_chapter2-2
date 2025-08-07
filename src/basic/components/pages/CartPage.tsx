@@ -20,6 +20,7 @@ type CartPageProps = {
   completeOrder: () => void;
   addNotification: (message: string, type?: NotificationType) => void;
   addToCart: (product: ProductWithUI) => void;
+  applyCoupon: (coupon: Coupon) => void;
 };
 
 export default function CartPage({
@@ -35,6 +36,7 @@ export default function CartPage({
   setCart,
   addNotification,
   addToCart,
+  applyCoupon,
 }: CartPageProps) {
   const totals = calculateCartTotal(cart, selectedCoupon);
 
@@ -84,8 +86,7 @@ export default function CartPage({
                 coupons={coupons}
                 selectedCoupon={selectedCoupon}
                 setSelectedCoupon={setSelectedCoupon}
-                addNotification={addNotification}
-                cart={cart}
+                applyCoupon={applyCoupon}
               />
 
               <section className='bg-white rounded-lg border border-gray-200 p-4'>
