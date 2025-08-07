@@ -1,53 +1,27 @@
-import { useState, useCallback } from 'react';
-
-import { Coupon } from '../../../types';
-
 type NotificationType = 'error' | 'success' | 'warning';
+
+type CouponForm = {
+  name: string;
+  code: string;
+  discountType: 'amount' | 'percentage';
+  discountValue: number;
+};
 
 interface CouponFormProps {
   addNotification: (message: string, type?: NotificationType) => void;
   setShowCouponForm: React.Dispatch<React.SetStateAction<boolean>>;
-  coupons: Coupon[];
-  setCoupons: React.Dispatch<React.SetStateAction<Coupon[]>>;
+  handleCouponSubmit: (e: React.FormEvent) => void;
+  couponForm: CouponForm;
+  setCouponForm: React.Dispatch<React.SetStateAction<CouponForm>>;
 }
 
 export default function CouponForm({
   setShowCouponForm,
   addNotification,
-  coupons,
-  setCoupons,
+  handleCouponSubmit,
+  couponForm,
+  setCouponForm,
 }: CouponFormProps) {
-  const [couponForm, setCouponForm] = useState({
-    name: '',
-    code: '',
-    discountType: 'amount' as 'amount' | 'percentage',
-    discountValue: 0,
-  });
-
-  const handleCouponSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    addCoupon(couponForm);
-    setCouponForm({
-      name: '',
-      code: '',
-      discountType: 'amount',
-      discountValue: 0,
-    });
-    setShowCouponForm(false);
-  };
-  const addCoupon = useCallback(
-    (newCoupon: Coupon) => {
-      const existingCoupon = coupons.find((c) => c.code === newCoupon.code);
-      if (existingCoupon) {
-        addNotification('이미 존재하는 쿠폰 코드입니다.', 'error');
-        return;
-      }
-      setCoupons((prev) => [...prev, newCoupon]);
-      addNotification('쿠폰이 추가되었습니다.', 'success');
-    },
-    [coupons, addNotification]
-  );
-
   return (
     <div className='mt-6 p-4 bg-gray-50 rounded-lg'>
       <form onSubmit={handleCouponSubmit} className='space-y-4'>

@@ -81,7 +81,9 @@ export function useProductForm({
 export function useCouponForm(
   coupons: Coupon[],
   addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void,
-  setCoupons: React.Dispatch<React.SetStateAction<Coupon[]>>
+  setCoupons: React.Dispatch<React.SetStateAction<Coupon[]>>,
+  selectedCoupon: Coupon | null,
+  setSelectedCoupon: React.Dispatch<React.SetStateAction<Coupon | null>>
 ) {
   const [showCouponForm, setShowCouponForm] = useState(false);
   const [couponForm, setCouponForm] = useState({
@@ -115,9 +117,23 @@ export function useCouponForm(
     [coupons, addNotification]
   );
 
+  const deleteCoupon = useCallback(
+    (couponCode: string) => {
+      setCoupons((prev) => prev.filter((c) => c.code !== couponCode));
+      if (selectedCoupon?.code === couponCode) {
+        setSelectedCoupon(null);
+      }
+      addNotification('쿠폰이 삭제되었습니다.', 'success');
+    },
+    [selectedCoupon, addNotification]
+  );
+
   return {
     handleCouponSubmit,
     showCouponForm,
     setShowCouponForm,
+    deleteCoupon,
+    couponForm,
+    setCouponForm,
   };
 }

@@ -11,7 +11,7 @@
 import { Coupon } from '../../../types';
 import { ProductWithUI } from '../../App';
 import CouponsTab from '../tab/CouponsTab';
-import ProductsTab from '../tab/DroductsTab';
+import ProductsTab from '../tab/ProductsTab';
 type NotificationType = 'error' | 'success' | 'warning';
 
 type AdminPageProps = {

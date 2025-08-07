@@ -1,6 +1,5 @@
-import { useState, useCallback } from 'react';
-
 import { Coupon } from '../../../types';
+import { useCouponForm } from '../../hooks/useSubmitForm';
 import CouponForm from '../form/CouponForm';
 
 type NotificationType = 'error' | 'success' | 'warning';
@@ -20,18 +19,14 @@ export default function CouponsTab({
   selectedCoupon,
   setSelectedCoupon,
 }: CouponsTabProps) {
-  const deleteCoupon = useCallback(
-    (couponCode: string) => {
-      setCoupons((prev) => prev.filter((c) => c.code !== couponCode));
-      if (selectedCoupon?.code === couponCode) {
-        setSelectedCoupon(null);
-      }
-      addNotification('쿠폰이 삭제되었습니다.', 'success');
-    },
-    [selectedCoupon, addNotification]
-  );
-
-  const [showCouponForm, setShowCouponForm] = useState(false);
+  const {
+    deleteCoupon,
+    showCouponForm,
+    setShowCouponForm,
+    handleCouponSubmit,
+    setCouponForm,
+    couponForm,
+  } = useCouponForm(coupons, addNotification, setCoupons, selectedCoupon, setSelectedCoupon);
 
   return (
     <section className='bg-white rounded-lg border border-gray-200'>
@@ -95,9 +90,10 @@ export default function CouponsTab({
         {showCouponForm && (
           <CouponForm
             addNotification={addNotification}
-            coupons={coupons}
-            setCoupons={setCoupons}
             setShowCouponForm={setShowCouponForm}
+            handleCouponSubmit={handleCouponSubmit}
+            setCouponForm={setCouponForm}
+            couponForm={couponForm}
           />
         )}
       </div>
