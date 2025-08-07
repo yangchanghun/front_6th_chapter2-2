@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import { ProductWithUI } from '../../App';
-import useProductForm from '../../hooks/useSubmitForm';
+import { useProductForm } from '../../hooks/useSubmitForm';
 import ProductForm from '../form/ProductForm';
 
 type NotificationType = 'error' | 'success' | 'warning';

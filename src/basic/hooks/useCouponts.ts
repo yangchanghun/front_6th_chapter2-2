@@ -50,5 +50,16 @@ export function useCoupons(
     [addNotification, calculateCartTotal]
   );
 
-  return { coupons, setCoupons, setSelectedCoupon, selectedCoupon, applyCoupon };
+  const deleteCoupon = useCallback(
+    (couponCode: string) => {
+      setCoupons((prev) => prev.filter((c) => c.code !== couponCode));
+      if (selectedCoupon?.code === couponCode) {
+        setSelectedCoupon(null);
+      }
+      addNotification('쿠폰이 삭제되었습니다.', 'success');
+    },
+    [selectedCoupon, addNotification]
+  );
+
+  return { coupons, setCoupons, setSelectedCoupon, selectedCoupon, applyCoupon, deleteCoupon };
 }

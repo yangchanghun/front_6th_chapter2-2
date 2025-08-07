@@ -10,6 +10,7 @@ import { useCoupons } from './hooks/useCouponts';
 import { useProducts } from './hooks/useProducts';
 import { getRemainingStock } from './utils/calculateItem';
 import { filterProductsBySearchTerm } from './utils/filterProducts';
+import { useCouponForm } from './hooks/useSubmitForm';
 export interface ProductWithUI extends Product {
   description?: string;
   isRecommended?: boolean;
@@ -115,9 +116,9 @@ const App = () => {
             coupons={coupons}
             setProducts={setProducts}
             setCoupons={setCoupons}
-            selectedCoupon={selectedCoupon}
-            setSelectedCoupon={setSelectedCoupon}
             deleteProduct={deleteProduct}
+            setSelectedCoupon={setSelectedCoupon}
+            selectedCoupon={selectedCoupon}
           />
         ) : (
           <CartPage

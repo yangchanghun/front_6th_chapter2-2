@@ -24,8 +24,8 @@ type AdminPageProps = {
   setProducts: React.Dispatch<React.SetStateAction<ProductWithUI[]>>;
   selectedCoupon: Coupon | null;
   setCoupons: React.Dispatch<React.SetStateAction<Coupon[]>>;
-  setSelectedCoupon: React.Dispatch<React.SetStateAction<Coupon | null>>;
   deleteProduct: (productId: string) => void; // ✅ 이 줄이 핵심
+  setSelectedCoupon: React.Dispatch<React.SetStateAction<Coupon | null>>;
 };
 
 export default function AdminPage({
@@ -38,8 +38,8 @@ export default function AdminPage({
   setCoupons,
   setSelectedCoupon,
   selectedCoupon,
-  deleteProduct,
   coupons,
+  deleteProduct,
 }: AdminPageProps) {
   return (
     <div className='max-w-6xl mx-auto'>
