@@ -21,6 +21,8 @@ type CartPageProps = {
   addNotification: (message: string, type?: NotificationType) => void;
   addToCart: (product: ProductWithUI) => void;
   applyCoupon: (coupon: Coupon) => void;
+  updateQuantity: (productId: string, newQuantity: number) => void;
+  removeFromCart: (productId: string) => void;
 };
 
 export default function CartPage({
@@ -37,6 +39,8 @@ export default function CartPage({
   addNotification,
   addToCart,
   applyCoupon,
+  updateQuantity,
+  removeFromCart,
 }: CartPageProps) {
   const totals = calculateCartTotal(cart, selectedCoupon);
 
@@ -76,6 +80,8 @@ export default function CartPage({
                 addNotification={addNotification}
                 setCart={setCart}
                 products={products}
+                updateQuantity={updateQuantity}
+                removeFromCart={removeFromCart}
               />
             )}
           </section>

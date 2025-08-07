@@ -64,7 +64,10 @@ const App = () => {
     []
   );
 
-  const { cart, setCart, totalItemCount, addToCart } = useCart(addNotification);
+  const { cart, setCart, totalItemCount, addToCart, removeFromCart, updateQuantity } = useCart(
+    addNotification,
+    products
+  );
   const { coupons, setCoupons, selectedCoupon, setSelectedCoupon, applyCoupon } = useCoupons(
     cart,
     addNotification
@@ -131,6 +134,8 @@ const App = () => {
             addNotification={addNotification}
             addToCart={addToCart}
             applyCoupon={applyCoupon}
+            removeFromCart={removeFromCart}
+            updateQuantity={updateQuantity}
           />
         )}
       </main>

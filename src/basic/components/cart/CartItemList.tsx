@@ -1,8 +1,5 @@
-import { useCallback } from 'react';
-
 import { CartItem } from '../../../types';
 import { ProductWithUI } from '../../App';
-import { getRemainingStock } from '../../utils/calculateItem';
 import { calculateItemTotal } from '../../utils/calculateItem';
 type NotificationType = 'error' | 'success' | 'warning';
 
@@ -10,45 +7,12 @@ interface CartItemListProps {
   cart: CartItem[];
   addNotification: (message: string, type?: NotificationType) => void;
   setCart: React.Dispatch<React.SetStateAction<CartItem[]>>;
-
+  updateQuantity: (productId: string, newQuantity: number) => void;
+  removeFromCart: (productId: string) => void;
   products: ProductWithUI[];
 }
 
-export default function CartItemList({
-  cart,
-  addNotification,
-  setCart,
-  products,
-}: CartItemListProps) {
-  const removeFromCart = useCallback((productId: string) => {
-    setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
-  }, []);
-
-  const updateQuantity = useCallback(
-    (productId: string, newQuantity: number) => {
-      if (newQuantity <= 0) {
-        removeFromCart(productId);
-        return;
-      }
-
-      const product = products.find((p) => p.id === productId);
-      if (!product) return;
-
-      const maxStock = product.stock;
-      if (newQuantity > maxStock) {
-        addNotification(`재고는 ${maxStock}개까지만 있습니다.`, 'error');
-        return;
-      }
-
-      setCart((prevCart) =>
-        prevCart.map((item) =>
-          item.product.id === productId ? { ...item, quantity: newQuantity } : item
-        )
-      );
-    },
-    [products, removeFromCart, addNotification, getRemainingStock]
-  );
-
+export default function CartItemList({ cart, removeFromCart, updateQuantity }: CartItemListProps) {
   return (
     <div className='space-y-3'>
       {cart.map((item) => {

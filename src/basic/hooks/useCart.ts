@@ -31,7 +31,8 @@ import { ProductWithUI } from '../App';
 import { getRemainingStock } from '../utils/calculateItem';
 
 export function useCart(
-  addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void
+  addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void,
+  products: ProductWithUI[]
 ) {
   const [cart, setCart] = useState<CartItem[]>(() => {
     const saved = localStorage.getItem('cart');
@@ -78,6 +79,35 @@ export function useCart(
     [cart, addNotification, getRemainingStock]
   );
 
+  const removeFromCart = useCallback((productId: string) => {
+    setCart((prevCart) => prevCart.filter((item) => item.product.id !== productId));
+  }, []);
+
+  const updateQuantity = useCallback(
+    (productId: string, newQuantity: number) => {
+      if (newQuantity <= 0) {
+        removeFromCart(productId);
+        return;
+      }
+
+      const product = products.find((p) => p.id === productId);
+      if (!product) return;
+
+      const maxStock = product.stock;
+      if (newQuantity > maxStock) {
+        addNotification(`재고는 ${maxStock}개까지만 있습니다.`, 'error');
+        return;
+      }
+
+      setCart((prevCart) =>
+        prevCart.map((item) =>
+          item.product.id === productId ? { ...item, quantity: newQuantity } : item
+        )
+      );
+    },
+    [products, removeFromCart, addNotification, getRemainingStock]
+  );
+
   // 카트 아이템 수 계산
   useEffect(() => {
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
@@ -93,5 +123,5 @@ export function useCart(
     }
   }, [cart]);
 
-  return { cart, setCart, totalItemCount, addToCart };
+  return { cart, setCart, totalItemCount, addToCart, updateQuantity, removeFromCart };
 }
