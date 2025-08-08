@@ -1,10 +1,10 @@
 // utils/productFilter.ts
 import { Product } from '../../types';
-import { ProductWithUI } from '../App';
+import { ProductWithUI } from '../components/AppContainer';
 
 export function filterProductsBySearchTerm(
   products: ProductWithUI[],
-  searchTerm: string
+  searchTerm: string,
 ): Product[] {
   if (!searchTerm) return products;
 
@@ -12,6 +12,6 @@ export function filterProductsBySearchTerm(
   return products.filter(
     (product) =>
       product.name.toLowerCase().includes(lowered) ||
-      (product.description && product.description.toLowerCase().includes(lowered))
+      (product.description && product.description.toLowerCase().includes(lowered)),
   );
 }

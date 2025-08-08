@@ -1,5 +1,3 @@
-import { ProductWithUI } from '../AppContainer';
-
 type NotificationType = 'error' | 'success' | 'warning';
 
 type ProductDraft = {
@@ -13,7 +11,6 @@ type ProductDraft = {
 interface ProductFormProps {
   editingProduct: string | null;
   setEditingProduct: React.Dispatch<React.SetStateAction<string | null>>;
-  setProducts: React.Dispatch<React.SetStateAction<ProductWithUI[]>>;
   addNotification: (message: string, type?: NotificationType) => void;
   setShowProductForm: React.Dispatch<React.SetStateAction<boolean>>;
   productForm: ProductDraft;

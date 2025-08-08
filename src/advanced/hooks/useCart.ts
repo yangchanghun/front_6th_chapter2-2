@@ -27,14 +27,13 @@
 import { useAtom, useAtomValue } from 'jotai';
 import { useState, useEffect, useCallback } from 'react';
 
-import { CartItem } from '../../types';
 import { cartAtom } from '../atoms/cartAtom';
 import { productsAtom } from '../atoms/productAtom';
 import { ProductWithUI } from '../components/AppContainer';
 import { getRemainingStock } from '../utils/calculateItem';
 
 export function useCart(
-  addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void
+  addNotification: (message: string, type?: 'error' | 'success' | 'warning') => void,
 ) {
   const products = useAtomValue(productsAtom);
 
@@ -61,7 +60,7 @@ export function useCart(
           }
 
           return prevCart.map((item) =>
-            item.product.id === product.id ? { ...item, quantity: newQuantity } : item
+            item.product.id === product.id ? { ...item, quantity: newQuantity } : item,
           );
         }
 
@@ -70,7 +69,7 @@ export function useCart(
 
       addNotification('장바구니에 담았습니다', 'success');
     },
-    [cart, addNotification, getRemainingStock]
+    [cart, addNotification, getRemainingStock],
   );
 
   const removeFromCart = useCallback((productId: string) => {
@@ -95,11 +94,11 @@ export function useCart(
 
       setCart((prevCart) =>
         prevCart.map((item) =>
-          item.product.id === productId ? { ...item, quantity: newQuantity } : item
-        )
+          item.product.id === productId ? { ...item, quantity: newQuantity } : item,
+        ),
       );
     },
-    [products, removeFromCart, addNotification, getRemainingStock]
+    [products, removeFromCart, addNotification, getRemainingStock],
   );
 
   // 카트 아이템 수 계산

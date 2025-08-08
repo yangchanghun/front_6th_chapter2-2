@@ -10,7 +10,6 @@ import { useCoupons } from './hooks/useCouponts';
 import { useProducts } from './hooks/useProducts';
 import { getRemainingStock } from './utils/calculateItem';
 import { filterProductsBySearchTerm } from './utils/filterProducts';
-import { useCouponForm } from './hooks/useSubmitForm';
 export interface ProductWithUI extends Product {
   description?: string;
   isRecommended?: boolean;
@@ -62,16 +61,16 @@ const App = () => {
         setNotifications((prev) => prev.filter((n) => n.id !== id));
       }, 3000);
     },
-    []
+    [],
   );
 
   const { cart, setCart, totalItemCount, addToCart, removeFromCart, updateQuantity } = useCart(
     addNotification,
-    products
+    products,
   );
   const { coupons, setCoupons, selectedCoupon, setSelectedCoupon, applyCoupon } = useCoupons(
     cart,
-    addNotification
+    addNotification,
   );
 
   // 검색시

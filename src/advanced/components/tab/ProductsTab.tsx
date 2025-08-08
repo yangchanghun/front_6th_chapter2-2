@@ -28,7 +28,7 @@ export default function ProductsTab({
     setProductForm,
     setEditingProduct,
     editingProduct,
-  } = useProductForm({ addNotification, setProducts, setShowProductForm });
+  } = useProductForm({ addNotification, setShowProductForm });
 
   return (
     <section className='bg-white rounded-lg border border-gray-200'>
@@ -117,7 +117,6 @@ export default function ProductsTab({
         <ProductForm
           editingProduct={editingProduct}
           setEditingProduct={setEditingProduct}
-          setProducts={setProducts}
           addNotification={addNotification}
           setShowProductForm={setShowProductForm}
           productForm={productForm}

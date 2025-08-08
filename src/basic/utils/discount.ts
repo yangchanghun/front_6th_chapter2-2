@@ -1,5 +1,5 @@
 import { CartItem } from '../../types';
-
+import { Discount } from '../../types';
 export function getBaseDiscount(discounts: Discount[], quantity: number) {
   return discounts.reduce((max, d) => (quantity >= d.quantity && d.rate > max ? d.rate : max), 0);
 }
