@@ -5,6 +5,16 @@ import react from '@vitejs/plugin-react-swc';
 export default mergeConfig(
   defineConfig({
     plugins: [react()],
+    base: './',
+    build: {
+      rollupOptions: {
+        input: {
+          basic: './index.basic.html',
+          advanced: './index.advanced.html',
+          origin: './index.origin.html',
+        },
+      },
+    },
   }),
   defineTestConfig({
     test: {
@@ -12,5 +22,5 @@ export default mergeConfig(
       environment: 'jsdom',
       setupFiles: './src/setupTests.ts',
     },
-  })
+  }),
 );
