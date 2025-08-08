@@ -50,11 +50,6 @@ jobs:
             echo "✅ basic.html 복사 완료"
           fi
 
-          if [ -f "dist/index.advanced.html" ]; then
-            cp dist/index.advanced.html dist/advanced.html
-            echo "✅ advanced.html 복사 완료"
-          fi
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         if: github.ref == 'refs/heads/main'
