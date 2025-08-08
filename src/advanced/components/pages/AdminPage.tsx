@@ -21,7 +21,6 @@ type AdminPageProps = {
   formatPrice: (price: number, productId?: string) => string;
   addNotification: (message: string, type?: NotificationType) => void;
   coupons: Coupon[];
-  setProducts: React.Dispatch<React.SetStateAction<ProductWithUI[]>>;
   selectedCoupon: Coupon | null;
   setCoupons: React.Dispatch<React.SetStateAction<Coupon[]>>;
   deleteProduct: (productId: string) => void; // ✅ 이 줄이 핵심
@@ -31,7 +30,6 @@ type AdminPageProps = {
 export default function AdminPage({
   setActiveTab,
   activeTab,
-  setProducts,
   products,
   formatPrice,
   addNotification,
@@ -78,7 +76,6 @@ export default function AdminPage({
           addNotification={addNotification}
           formatPrice={formatPrice}
           products={products}
-          setProducts={setProducts}
           deleteProduct={deleteProduct}
         />
       ) : (

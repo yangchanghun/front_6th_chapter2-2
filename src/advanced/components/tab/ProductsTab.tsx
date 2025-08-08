@@ -9,14 +9,12 @@ type NotificationType = 'error' | 'success' | 'warning';
 interface ProductsTabProps {
   addNotification: (message: string, type?: NotificationType) => void;
   formatPrice: (price: number, productId?: string) => string;
-  setProducts: React.Dispatch<React.SetStateAction<ProductWithUI[]>>;
   products: ProductWithUI[];
   deleteProduct: (productId: string) => void; // ✅ 이 줄이 핵심
 }
 export default function ProductsTab({
   addNotification,
   formatPrice,
-  setProducts,
   products,
   deleteProduct,
 }: ProductsTabProps) {
