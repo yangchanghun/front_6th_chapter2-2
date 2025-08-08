@@ -9,7 +9,7 @@
 // 쿠폰 관리
 // 새 쿠폰 추가
 import { Coupon } from '../../../types';
-import { ProductWithUI } from '../../App';
+import { ProductWithUI } from '../AppContainer';
 import CouponsTab from '../tab/CouponsTab';
 import ProductsTab from '../tab/ProductsTab';
 type NotificationType = 'error' | 'success' | 'warning';

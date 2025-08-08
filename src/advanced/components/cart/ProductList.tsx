@@ -1,5 +1,5 @@
 import { CartItem } from '../../../types';
-import { ProductWithUI } from '../../App';
+import { ProductWithUI } from '../AppContainer';
 import { getRemainingStock } from '../../utils/calculateItem';
 interface ProductListProps {
   filteredProducts: ProductWithUI[];

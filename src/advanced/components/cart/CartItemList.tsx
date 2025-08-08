@@ -1,5 +1,5 @@
 import { CartItem } from '../../../types';
-import { ProductWithUI } from '../../App';
+import { ProductWithUI } from '../AppContainer';
 import { calculateItemTotal } from '../../utils/calculateItem';
 type NotificationType = 'error' | 'success' | 'warning';
 

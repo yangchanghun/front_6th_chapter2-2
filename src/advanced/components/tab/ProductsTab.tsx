@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { ProductWithUI } from '../../App';
+import { ProductWithUI } from '../AppContainer';
 import { useProductForm } from '../../hooks/useSubmitForm';
 import ProductForm from '../form/ProductForm';
 
@@ -84,8 +84,8 @@ export default function ProductsTab({
                       product.stock > 10
                         ? 'bg-green-100 text-green-800'
                         : product.stock > 0
-                        ? 'bg-yellow-100 text-yellow-800'
-                        : 'bg-red-100 text-red-800'
+                          ? 'bg-yellow-100 text-yellow-800'
+                          : 'bg-red-100 text-red-800'
                     }`}
                   >
                     {product.stock}개

@@ -1,5 +1,5 @@
 import { CartItem, Coupon } from '../../../types';
-import { ProductWithUI } from '../../App';
+import { ProductWithUI } from '../AppContainer';
 import { calculateCartTotal } from '../../utils/calculateItem';
 import CartItemList from '../cart/CartItemList';
 import CouponSelector from '../cart/CouponSelector';

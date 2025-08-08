@@ -1,4 +1,4 @@
-import { Notification } from '../../App';
+import { Notification } from '../../components/AppContainer';
 
 interface UIToastProps {
   notifications: Notification[];
@@ -15,8 +15,8 @@ export default function UIToast({ notifications, setNotifications }: UIToastProp
             notif.type === 'error'
               ? 'bg-red-600'
               : notif.type === 'warning'
-              ? 'bg-yellow-600'
-              : 'bg-green-600'
+                ? 'bg-yellow-600'
+                : 'bg-green-600'
           }`}
         >
           <span className='mr-2'>{notif.message}</span>

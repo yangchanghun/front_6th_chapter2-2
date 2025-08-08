@@ -1,4 +1,4 @@
-import { ProductWithUI } from '../../App';
+import { ProductWithUI } from '../AppContainer';
 
 type NotificationType = 'error' | 'success' | 'warning';
 
