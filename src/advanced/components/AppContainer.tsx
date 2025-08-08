@@ -25,7 +25,7 @@ export interface Notification {
 }
 
 const App = () => {
-  const { products, setProducts, deleteProduct } = useProducts();
+  const { products, deleteProduct } = useProducts();
   const isAdmin = useAtomValue(isAdminAtom);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [activeTab, setActiveTab] = useState<'products' | 'coupons'>('products');
@@ -64,14 +64,14 @@ const App = () => {
         setNotifications((prev) => prev.filter((n) => n.id !== id));
       }, 3000);
     },
-    []
+    [],
   );
 
   const { cart, setCart, totalItemCount, addToCart, removeFromCart, updateQuantity } =
     useCart(addNotification);
   const { coupons, setCoupons, selectedCoupon, setSelectedCoupon, applyCoupon } = useCoupons(
     cart,
-    addNotification
+    addNotification,
   );
 
   // 검색시
@@ -112,7 +112,6 @@ const App = () => {
             formatPrice={formatPrice}
             addNotification={addNotification}
             coupons={coupons}
-            setProducts={setProducts}
             setCoupons={setCoupons}
             deleteProduct={deleteProduct}
             setSelectedCoupon={setSelectedCoupon}
